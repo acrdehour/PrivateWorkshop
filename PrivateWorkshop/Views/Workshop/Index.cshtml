@@ -1,0 +1,58 @@
+﻿@using PrivateWorkshop.Constants
+@model IEnumerable<Workshop>
+@{
+}
+<h1 class="text-center mb-5">Workshop Courses</h1>
+
+<div class="list-group">
+    @foreach (var workshop in Model)
+    {
+        <div class="list-group-item" id="workshop-@workshop.Id">
+            <h3>@workshop.Title</h3>
+            <p>@workshop.Description</p>
+            <p><strong>Instructor : </strong>@workshop.Instructor</p>
+            <p><strong>Price : $</strong>@workshop.Price per person</p>
+
+            @if (User.IsInRole(Roles.Admin))
+            {
+                <div>
+                    <button onclick="deleteJobPosting(@workshop.Id)" class="btn btn-sm btn-danger">Delete</button>
+                </div>
+                //<a asp-action="DeleteEasy" asp-route-id="@jobPosting.Id">Delete</a>
+            }
+            @if (User.IsInRole(Roles.Client))
+            {
+                <div>
+                    <button onclick="deleteJobPosting(@workshop.Id)" class="btn btn-sm btn-primary">Detail</button>
+                </div>
+                //<a asp-action="DeleteEasy" asp-route-id="@jobPosting.Id">Delete</a>
+            }
+        </div>
+    }
+
+</div>
+
+@section Scripts {
+    <script>
+        function deleteJobPosting(id){
+            if(confirm("Comfirm to delete Workshop Id " + id + " ?")){
+
+                //url
+                //type (delete)
+                //success -> visually remove the job posting ("f5" can do the job BUT that not best practice)
+                //error -> show errir message
+
+                $.ajax({
+                    url: "@Url.Action("Delete", "Workshop")/"+id,
+                    type:"delete",
+                    success: function(result){
+                        $("#workshop-"+id).remove();
+                    },
+                    error:function(err){
+                        alert("An error occured.")
+                    }
+                });
+            };
+        }
+    </script>
+}

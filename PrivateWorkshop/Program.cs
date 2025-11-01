@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PrivateWorkshop.Data;
+using PrivateWorkshop.Models;
+using PrivateWorkshop.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -17,6 +18,10 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddScoped<IRespository<Workshop>, WorkshopRepository>();
+
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
@@ -46,7 +51,7 @@ app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Workshop}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 
