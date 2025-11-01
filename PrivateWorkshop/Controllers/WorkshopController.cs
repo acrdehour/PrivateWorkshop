@@ -54,12 +54,12 @@ namespace PrivateWorkshop.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
 
-            var jobPosting = await _respository.GetByIdAsync(id);
+            var workshop = await _respository.GetByIdAsync(id);
 
-            if (jobPosting == null)
+            if (workshop == null)
             {
                 return NotFound();
             }

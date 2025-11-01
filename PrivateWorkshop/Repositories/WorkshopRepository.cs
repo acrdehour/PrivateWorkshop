@@ -18,16 +18,16 @@ namespace PrivateWorkshop.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
-            var jobPosting = await _context.Workshops.FindAsync(id);
+            var workshop = await _context.Workshops.FindAsync(id);
 
-            if (jobPosting == null)
+            if (workshop == null)
             {
                 throw new KeyNotFoundException();
             }
 
-            _context.Workshops.Remove(jobPosting);
+            _context.Workshops.Remove(workshop);
             await _context.SaveChangesAsync();
         }
 
@@ -36,16 +36,16 @@ namespace PrivateWorkshop.Repositories
             return await _context.Workshops.ToListAsync();
         }
 
-        public async Task<Workshop> GetByIdAsync(int id)
+        public async Task<Workshop> GetByIdAsync(Guid id)
         {
-            var jobPosting = await _context.Workshops.FindAsync(id);
+            var workshop = await _context.Workshops.FindAsync(id);
 
-            if (jobPosting == null)
+            if (workshop == null)
             {
                 throw new KeyNotFoundException();
             }
 
-            return jobPosting;
+            return workshop;
         }
 
         public async Task UpdateAsync(Workshop entity)

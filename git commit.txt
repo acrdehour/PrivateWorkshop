@@ -1,0 +1,28 @@
+git commit
+add authentication , recreate migration and db , seeding roles and user
+-------------------
+1.Authorization - Login/Logout/Register as Client.
+2.Show list of all Workshop.
+3.Functionable Create New Workshop Page For Admin Role.
+4.Mock-up Detail and Delete Workshop button.
+Script work :: create model + view model , create workshop controller + 'index' view + respository, add 'workshops' dbSet and update db , add role to register
+
+ฉันต้องการสร้าง action ใน controller ที่จะ get workshop by id ซึ่งจะโดนเรียกจากปุ่มในหน้า view 'Index' โดยมันจะแสดง view ของตัวเองที่จะโชว์ workshop detail และมีปุ่ม entroll 
+
+feat(auth): add login, logout, and register for client
+feat(workshop): display list of all workshops
+feat(admin): implement Create Workshop page for admin role
+ui(workshop): add mock-up for detail and delete buttons
+chore(db): add Workshop DbSet, update database, and configure role assignment
+
+feat(workshop) : delete workshop when client clicked on Delete button++
+chore(db) : add Bookings dbSet and updatedb+
+feat(Booking) : create booking when client clicked on Enroll button++
+ui(Booking) : show workshop detail and Enroll button++
+
+----
+แผนงานต่อ ทำ ทีละอันแล้ว commit ขึ้น
+feat(workshop): enable deleting workshop by admin++
+chore(db): add Bookings DbSet and update database
+feat(booking): create booking when client enrolls in workshop
+ui(booking): display workshop detail and enroll button

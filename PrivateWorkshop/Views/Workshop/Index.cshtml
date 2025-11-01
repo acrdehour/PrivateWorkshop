@@ -16,16 +16,16 @@
             @if (User.IsInRole(Roles.Admin))
             {
                 <div>
-                    <button onclick="deleteJobPosting(@workshop.Id)" class="btn btn-sm btn-danger">Delete</button>
+                    <button onclick="deleteWorkshop('@workshop.Id')"
+                            class="btn btn-sm btn-danger">Delete</button>
                 </div>
-                //<a asp-action="DeleteEasy" asp-route-id="@jobPosting.Id">Delete</a>
             }
             @if (User.IsInRole(Roles.Client))
             {
                 <div>
-                    <button onclick="deleteJobPosting(@workshop.Id)" class="btn btn-sm btn-primary">Detail</button>
+                    <button onclick="deleteJobPosting(@workshop.Id)" 
+                    class="btn btn-sm btn-primary">Detail</button>
                 </div>
-                //<a asp-action="DeleteEasy" asp-route-id="@jobPosting.Id">Delete</a>
             }
         </div>
     }
@@ -34,7 +34,7 @@
 
 @section Scripts {
     <script>
-        function deleteJobPosting(id){
+        function deleteWorkshop(id){
             if(confirm("Comfirm to delete Workshop Id " + id + " ?")){
 
                 //url
