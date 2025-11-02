@@ -64,6 +64,67 @@ namespace PrivateWorkshop.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        [HttpGet]
+        public async Task<IActionResult> Update(Guid id)
+        {
+            var workshop = await _repository.GetByIdAsync(id);
+
+            if (workshop == null)
+            {
+                return NotFound();
+            }
+
+            if (!User.IsInRole(Roles.Admin))
+            {
+                return Forbid();
+            }
+
+            var vm = new WorkshopViewModel
+            {
+                Id = workshop.Id,
+                Title = workshop.Title,
+                Description = workshop.Description,
+                Instructor = workshop.Instructor,
+                Price = workshop.Price,
+                MaxSlot = workshop.MaxSlot,
+                Duration = workshop.Duration
+            };
+
+            return View(vm);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Update(WorkshopViewModel WorkshopVm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(WorkshopVm);
+            }
+
+            var workshop = await _repository.GetByIdAsync(WorkshopVm.Id);
+
+            if (workshop == null)
+            {
+                return NotFound();
+            }
+
+            if (!User.IsInRole(Roles.Admin))
+            {
+                return Forbid();
+            }
+
+            workshop.Title = WorkshopVm.Title;
+            workshop.Description = WorkshopVm.Description;
+            workshop.Instructor = WorkshopVm.Instructor;
+            workshop.Price = WorkshopVm.Price;
+            workshop.MaxSlot = WorkshopVm.MaxSlot;
+
+            await _repository.UpdateAsync(workshop);
+
+            return RedirectToAction(nameof(Details), new { id = workshop.Id });
+        }
+
 
         [HttpDelete]
         public async Task<IActionResult> Delete(Guid id)

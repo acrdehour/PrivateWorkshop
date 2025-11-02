@@ -26,7 +26,7 @@
     <div class="d-flex justify-content-between">
         @if (User.IsInRole(Roles.Admin))
         {
-            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-sm btn-primary">
+            <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-sm btn-primary">
                 Edit
             </a>
         }
