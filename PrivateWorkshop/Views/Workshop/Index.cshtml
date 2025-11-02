@@ -13,20 +13,19 @@
             <p><strong>Instructor : </strong>@workshop.Instructor</p>
             <p><strong>Price : $</strong>@workshop.Price per person</p>
 
-            @if (User.IsInRole(Roles.Admin))
-            {
-                <div>
-                    <button onclick="deleteWorkshop('@workshop.Id')"
-                            class="btn btn-sm btn-danger">Delete</button>
-                </div>
-            }
-            @if (User.IsInRole(Roles.Client))
-            {
-                <div>
-                    <button onclick="deleteJobPosting(@workshop.Id)" 
-                    class="btn btn-sm btn-primary">Detail</button>
-                </div>
-            }
+
+            <div class="d-flex justify-content-between">
+                <button onclick="deleteJobPosting(@workshop.Id)" class="btn btn-sm btn-primary">
+                    Detail
+                </button>
+
+                @if (User.IsInRole(Roles.Admin))
+                {
+                    <button onclick="deleteWorkshop('@workshop.Id')" class="btn btn-sm btn-danger">
+                        Delete
+                    </button>
+                }
+            </div>
         </div>
     }
 
