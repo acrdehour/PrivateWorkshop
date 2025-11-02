@@ -25,7 +25,7 @@ namespace PrivateWorkshop.Controllers
             var workshops = await _respository.GetAllAsync();
             return View(workshops);
         }
-
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
