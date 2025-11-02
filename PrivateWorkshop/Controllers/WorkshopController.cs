@@ -12,24 +12,24 @@ namespace PrivateWorkshop.Controllers
     public class WorkshopController : Controller
     {
 
-        private readonly IRespository<Workshop> _respository;
+        private readonly IRepository<Workshop> _repository;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public WorkshopController(IRespository<Workshop> respository, UserManager<IdentityUser> userManager)
+        public WorkshopController(IRepository<Workshop> respoitory, UserManager<IdentityUser> userManager)
         {
-            _respository = respository;
+            _repository = respoitory;
             _userManager = userManager;
         }
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var workshops = await _respository.GetAllAsync();
+            var workshops = await _repository.GetAllAsync();
             return View(workshops);
         }
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
-            var workshop = await _respository.GetByIdAsync(id);
+            var workshop = await _repository.GetByIdAsync(id);
             if (workshop == null)
             {
                 return NotFound();
@@ -59,7 +59,7 @@ namespace PrivateWorkshop.Controllers
                     Duration = WorkshopVm.Duration
                 };
 
-                await _respository.AddAsync(workshop);
+                await _repository.AddAsync(workshop);
             }
 
             return RedirectToAction(nameof(Index));
@@ -69,7 +69,7 @@ namespace PrivateWorkshop.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
 
-            var workshop = await _respository.GetByIdAsync(id);
+            var workshop = await _repository.GetByIdAsync(id);
 
             if (workshop == null)
             {
@@ -81,7 +81,7 @@ namespace PrivateWorkshop.Controllers
                 return Forbid();
             }
 
-            await _respository.DeleteAsync(id);
+            await _repository.DeleteAsync(id);
 
             return Ok();
         }

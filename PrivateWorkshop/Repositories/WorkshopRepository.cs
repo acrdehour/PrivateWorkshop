@@ -4,7 +4,7 @@ using PrivateWorkshop.Models;
 
 namespace PrivateWorkshop.Repositories
 {
-    public class WorkshopRepository : IRespository<Workshop>
+    public class WorkshopRepository : IRepository<Workshop>
     {
         private readonly ApplicationDbContext _context;
 
