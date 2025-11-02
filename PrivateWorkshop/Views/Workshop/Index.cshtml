@@ -15,10 +15,9 @@
 
 
             <div class="d-flex justify-content-between">
-                <button onclick="deleteJobPosting(@workshop.Id)" class="btn btn-sm btn-primary">
+                <a asp-action="Details" asp-route-id="@workshop.Id" class="btn btn-sm btn-primary">
                     Detail
-                </button>
-
+                </a>
                 @if (User.IsInRole(Roles.Admin))
                 {
                     <button onclick="deleteWorkshop('@workshop.Id')" class="btn btn-sm btn-danger">
