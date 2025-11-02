@@ -5,6 +5,7 @@ namespace PrivateWorkshop.ViewModels
 {
     public class WorkshopViewModel
     {
+        public Guid Id { get; set; }
         [Required]
         public string Title { get; set; }
         [Required]
