@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Core.Types;
 using PrivateWorkshop.Constants;
 using PrivateWorkshop.Models;
 using PrivateWorkshop.Repositories;
@@ -25,6 +26,17 @@ namespace PrivateWorkshop.Controllers
             var workshops = await _respository.GetAllAsync();
             return View(workshops);
         }
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var workshop = await _respository.GetByIdAsync(id);
+            if (workshop == null)
+            {
+                return NotFound();
+            }
+            return View(workshop);
+        }
+
         [HttpGet]
         public IActionResult Create()
         {

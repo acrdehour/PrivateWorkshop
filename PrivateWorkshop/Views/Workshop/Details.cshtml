@@ -1,0 +1,44 @@
+﻿@using PrivateWorkshop.Constants
+@using PrivateWorkshop.Models.Enums
+@model Workshop
+@{
+}
+<h1 class="text-center mb-5">Workshop Courses</h1>
+
+<div class="list-group-item" id="workshop-@Model.Id">
+    <h3>@Model.Title</h3>
+    <p>@Model.Description</p>
+    <p><strong>Instructor : </strong>@Model.Instructor</p>
+    <p><strong>Price : $</strong>@Model.Price per person</p>
+    @if (User.IsInRole(Roles.Client))
+    {
+        <div class="form-group">
+            <label asp-for="Duration" class="control-label"></label>
+            <select asp-for="Duration"
+                    asp-items="Html.GetEnumSelectList<TimeSlot>()"
+                    class="form-control">
+                <option value="">Select Time Slot</option>
+            </select>
+            <span asp-validation-for="Duration" class="text-danger"></span>
+        </div>
+    }
+    <br />
+    <div class="d-flex justify-content-between">
+        @if (User.IsInRole(Roles.Admin))
+        {
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-sm btn-primary">
+                Edit
+            </a>
+        }
+        @if (User.IsInRole(Roles.Client))
+        {
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-sm btn-primary">
+                Enroll
+            </a>
+        }
+        <a asp-action="Index" class="btn btn-sm btn-secondary">
+            Back
+        </a>
+    </div>
+    
+</div>
