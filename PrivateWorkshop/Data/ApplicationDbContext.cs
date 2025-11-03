@@ -6,6 +6,7 @@ namespace PrivateWorkshop.Data
     public class ApplicationDbContext : IdentityDbContext
     {
         public DbSet<Workshop> Workshops { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

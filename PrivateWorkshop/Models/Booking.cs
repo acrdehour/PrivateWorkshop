@@ -10,13 +10,13 @@ namespace PrivateWorkshop.Models
         public Guid Id { get; set; }
         // ✅ Foreign key field
         [Required] 
-        public int ClientId { get; set; }
+        public string ClientId { get; set; }
 
         // ✅ Navigation property
         [ForeignKey(nameof(ClientId))]
         public IdentityUser Client { get; set; }
         [Required]
-        public int WorkshopId { get; set; }
+        public Guid WorkshopId { get; set; }
 
         [ForeignKey(nameof(WorkshopId))]
         public Workshop Workshop { get; set; }
