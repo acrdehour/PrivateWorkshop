@@ -10,35 +10,48 @@
     <p>@Model.Description</p>
     <p><strong>Instructor : </strong>@Model.Instructor</p>
     <p><strong>Price : $</strong>@Model.Price per person</p>
-    @if (User.IsInRole(Roles.Client))
+    @if (User.IsInRole(Roles.Admin))
     {
-        <div class="form-group">
-            <label asp-for="Duration" class="control-label"></label>
-            <select asp-for="Duration"
-                    asp-items="Html.GetEnumSelectList<TimeSlot>()"
-                    class="form-control">
-                <option value="">Select Time Slot</option>
-            </select>
-            <span asp-validation-for="Duration" class="text-danger"></span>
-        </div>
-    }
-    <br />
-    <div class="d-flex justify-content-between">
-        @if (User.IsInRole(Roles.Admin))
-        {
+        
+        <div class="d-flex justify-content-between align-items-end">
             <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-sm btn-primary">
                 Edit
             </a>
-        }
-        @if (User.IsInRole(Roles.Client))
-        {
-            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-sm btn-primary">
-                Enroll
-            </a>
-        }
-        <a asp-action="Index" class="btn btn-sm btn-secondary">
-            Back
-        </a>
-    </div>
+            <a asp-action="Index" class="btn btn-secondary">Back</a>
+        </div>
+    }
+    @if (User.IsInRole(Roles.Client))
+    {
+        <form asp-controller="Booking" asp-action="Create" method="post" class="mt-4">
+            <input type="hidden" name="WorkshopId" value="@Model.Id" />
+
+            <!-- Duration Dropdown -->
+            <div class="form-group mb-3">
+                <label for="Duration" class="control-label">Select Time Slot</label>
+                <select id="Duration"
+                        name="Duration"
+                        asp-items="Html.GetEnumSelectList<TimeSlot>()"
+                        class="form-control">
+                    <option value="">-- Select Time Slot --</option>
+                </select>
+            </div>
+
+            <!-- Date Picker -->
+            <div class="form-group mb-3">
+                <label for="SelectedDate" class="control-label">Select Date</label>
+                <input type="date"
+                       id="SelectedDate"
+                       name="SelectedDate"
+                       class="form-control"
+                       min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                <small class="text-muted">You can only book future dates.</small>
+            </div>
+            <!-- Enroll + Back in the same row -->
+            <div class="d-flex justify-content-between align-items-end">
+                <button type="submit" class="btn btn-primary">Enroll</button>
+                <a asp-action="Index" class="btn btn-secondary">Back</a>
+            </div>
+        </form>
+    }
     
 </div>
