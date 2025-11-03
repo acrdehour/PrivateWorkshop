@@ -19,7 +19,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddScoped<IRespository<Workshop>, WorkshopRepository>();
+builder.Services.AddScoped<IWorkshopRepository, WorkshopRepository>();
+builder.Services.AddScoped<IBookingRepository,BookingRepository>();
 
 builder.Services.AddControllersWithViews();
 
