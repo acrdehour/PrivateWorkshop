@@ -12,10 +12,10 @@ namespace PrivateWorkshop.Controllers
     public class WorkshopController : Controller
     {
 
-        private readonly IRepository<Workshop> _repository;
+        private readonly IWorkshopRepository _repository;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public WorkshopController(IRepository<Workshop> respoitory, UserManager<IdentityUser> userManager)
+        public WorkshopController(IWorkshopRepository respoitory, UserManager<IdentityUser> userManager)
         {
             _repository = respoitory;
             _userManager = userManager;
