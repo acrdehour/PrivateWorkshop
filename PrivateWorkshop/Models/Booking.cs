@@ -23,7 +23,7 @@ namespace PrivateWorkshop.Models
         [Required]
         public DateOnly Date { get; set; }
         [Required]
-        public TimeSlot TimeSlot { get; set; }
+        public TimeSlot Duration { get; set; }
         [Required]
         public BookingStatus Status { get; set; }
         [Required]

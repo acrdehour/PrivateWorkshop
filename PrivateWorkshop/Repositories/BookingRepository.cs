@@ -1,12 +1,22 @@
-﻿using PrivateWorkshop.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using PrivateWorkshop.Data;
+using PrivateWorkshop.Models;
 
 namespace PrivateWorkshop.Repositories
 {
     public class BookingRepository : IBookingRepository
     {
-        public Task AddAsync(Booking entity)
+        private readonly ApplicationDbContext _context;
+
+        public BookingRepository(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+
+        public async Task AddAsync(Booking entity)
+        {
+            await _context.Bookings.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
         public Task DeleteAsync(Guid id)
