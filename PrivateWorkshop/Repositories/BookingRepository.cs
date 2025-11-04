@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PrivateWorkshop.Data;
 using PrivateWorkshop.Models;
+using PrivateWorkshop.Models.Enums;
 
 namespace PrivateWorkshop.Repositories
 {
@@ -17,6 +18,15 @@ namespace PrivateWorkshop.Repositories
         {
             await _context.Bookings.AddAsync(entity);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> CountBookingsAsync(Guid workshopId, DateOnly date, TimeSlot duration)
+        {
+            return await _context.Bookings
+                .Where(b => b.WorkshopId == workshopId
+                         && b.Date == date
+                         && b.Duration == duration)
+                .CountAsync();
         }
 
         public Task DeleteAsync(Guid id)

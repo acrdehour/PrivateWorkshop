@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PrivateWorkshop.Models;
+using PrivateWorkshop.Models.Enums;
 using PrivateWorkshop.Repositories;
 using PrivateWorkshop.ViewModels;
 
@@ -54,5 +55,18 @@ namespace PrivateWorkshop.Controllers
             TempData["Success"] = "Booking created successfully!";
             return RedirectToAction("MyBookings");
         }
+        [HttpGet]
+        public async Task<IActionResult> CheckAvailability(Guid workshopId, DateOnly date, TimeSlot duration)
+        {
+            var workshop = await _workshopRepository.GetByIdAsync(workshopId);
+            if (workshop == null) return NotFound();
+
+            var bookedCount = await _bookingRepository.CountBookingsAsync(workshopId, date, duration);
+
+            var remaining = workshop.MaxSlot - bookedCount;
+
+            return Json(new { remaining });
+        }
+
     }
 }

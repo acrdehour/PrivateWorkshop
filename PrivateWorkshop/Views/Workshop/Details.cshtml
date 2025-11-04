@@ -10,16 +10,7 @@
     <p>@Model.Description</p>
     <p><strong>Instructor : </strong>@Model.Instructor</p>
     <p><strong>Price : $</strong>@Model.Price per person</p>
-    @if (User.IsInRole(Roles.Admin))
-    {
-        
-        <div class="d-flex justify-content-between align-items-end">
-            <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-sm btn-primary">
-                Edit
-            </a>
-            <a asp-action="Index" class="btn btn-secondary">Back</a>
-        </div>
-    }
+
     @if (User.IsInRole(Roles.Client))
     {
         <form asp-controller="Booking" asp-action="Create" method="post" class="mt-4">
@@ -31,7 +22,8 @@
                 <select id="Duration"
                         name="Duration"
                         asp-items="Html.GetEnumSelectList<TimeSlot>()"
-                        class="form-control">
+                        class="form-control"
+                        onchange="checkSlot()">
                     <option value="">-- Select Time Slot --</option>
                 </select>
             </div>
@@ -43,15 +35,78 @@
                        id="SelectedDate"
                        name="SelectedDate"
                        class="form-control"
-                       min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                       min="@DateTime.Now.ToString("yyyy-MM-dd")"
+                       onchange="checkSlot()" />
                 <small class="text-muted">You can only book future dates.</small>
             </div>
-            <!-- Enroll + Back in the same row -->
+
+            <!-- slot message (แสดงตรงนี้) -->
+            <div id="slotMessage" class="mb-2"></div>
+
             <div class="d-flex justify-content-between align-items-end">
-                <button type="submit" class="btn btn-primary">Enroll</button>
+                <!-- ตั้ง id ให้ปุ่มเพื่อให้ JS ควบคุมได้ -->
+                <button id="enrollBtn" type="submit" class="btn btn-primary" disabled>Enroll</button>
                 <a asp-action="Index" class="btn btn-secondary">Back</a>
             </div>
         </form>
     }
-    
 </div>
+
+@section Scripts {
+    <script>
+        async function checkSlot() {
+            const date = document.getElementById('SelectedDate').value;
+            const duration = document.getElementById('Duration').value;
+            const workshopId = '@Model.Id';
+
+            const message = document.getElementById("slotMessage");
+            const enrollBtn = document.getElementById("enrollBtn");
+
+            // reset message if inputs incomplete
+            if (!date || !duration) {
+                message.innerHTML = "";
+                enrollBtn.disabled = true;
+                return;
+            }
+
+            try {
+                // encode params to be safe
+                const url = `/Booking/CheckAvailability?workshopId=${encodeURIComponent(workshopId)}&date=${encodeURIComponent(date)}&duration=${encodeURIComponent(duration)}`;
+                const res = await fetch(url, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (!res.ok) {
+                    // ถ้า server ตอบ error (404/500) แสดงข้อความทั่วไป
+                    message.innerHTML = "⚠ Unable to check availability. Please try again.";
+                    message.className = "text-warning fw-bold";
+                    enrollBtn.disabled = true;
+                    return;
+                }
+
+                const data = await res.json();
+
+                if (data.remaining <= 0) {
+                    message.innerHTML = "⚠ This time slot is fully booked.";
+                    message.className = "text-danger fw-bold";
+                    enrollBtn.disabled = true;
+                } else {
+                    message.innerHTML = `✅ ${data.remaining} slot(s) remaining`;
+                    message.className = "text-success fw-bold";
+                    enrollBtn.disabled = false;
+                }
+            } catch (err) {
+                console.error(err);
+                message.innerHTML = "⚠ Unable to check availability. Please check your connection.";
+                message.className = "text-warning fw-bold";
+                enrollBtn.disabled = true;
+            }
+        }
+
+        // optional: call checkSlot on page load if form is pre-filled
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSlot();
+        });
+    </script>
+}
