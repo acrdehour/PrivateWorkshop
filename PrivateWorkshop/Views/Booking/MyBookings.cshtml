@@ -1,0 +1,124 @@
+﻿@using PrivateWorkshop.Constants
+@using PrivateWorkshop.Models.Enums
+@model IEnumerable<Booking>
+
+<h1 class="text-center mb-5">My Bookings</h1>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info text-center">
+        You have no bookings yet.
+    </div>
+}
+else
+{
+    <div class="list-group">
+        @foreach (var booking in Model)
+        {
+            <div class="list-group-item mb-3" id="booking-@booking.Id">
+                <h4>@booking.Workshop.Title</h4>
+                <p>
+                    <strong>Client:</strong> @booking.Client.Email
+                </p>
+
+                <p>
+                    <strong>Date:</strong> @booking.Date.ToString("yyyy-MM-dd")
+                </p>
+
+                <p>
+                    <strong>Time Slot:</strong> @booking.Duration
+                </p>
+
+                <p>
+                <p>
+                    <strong>Status:</strong>
+                    @{
+                        string statusText;
+                        string statusClass;
+
+                        switch (booking.Status)
+                        {
+                            case BookingStatus.Pending:
+                                statusText = "รอดำเนินการ";
+                                statusClass = "warning";
+                                break;
+
+                            case BookingStatus.Approved:
+                                statusText = "อนุมัติแล้ว";
+                                statusClass = "success";
+                                break;
+
+                            case BookingStatus.Rejected:
+                                statusText = "ถูกปฏิเสธ";
+                                statusClass = "danger";
+                                break;
+
+                            case BookingStatus.Cancelled:
+                                statusText = "ยกเลิก";
+                                statusClass = "secondary";
+                                break;
+
+                            default:
+                                statusText = booking.Status.ToString();
+                                statusClass = "secondary";
+                                break;
+                        }
+                    }
+
+                    <span class="badge bg-@statusClass">
+                        @statusText
+                    </span>
+                </p>
+
+                </p>
+
+                <p><strong>Created:</strong> @booking.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</p>
+
+                <div class="d-flex justify-content-between align-items-center mt-3">
+
+                    <!-- กลุ่มปุ่มฝั่งซ้าย -->
+                    <div class="d-flex gap-2">
+                        <a asp-controller="Workshop" asp-action="Details" asp-route-id="@booking.WorkshopId"
+                           class="btn btn-sm btn-outline-primary">
+                            View Workshop
+                        </a>
+
+                        @if (!User.IsInRole(Roles.Admin) && booking.Status == BookingStatus.Pending)
+                        {
+                            <a asp-action="Cancel" asp-route-id="@booking.Id" class="btn btn-sm btn-danger">
+                                Cancel Booking
+                            </a>
+                        }
+
+                        @if (User.IsInRole(Roles.Admin) && booking.Status == BookingStatus.Pending)
+                        {
+                            <form asp-action="Approve" asp-route-id="@booking.Id" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    Approve
+                                </button>
+                            </form>
+
+                            <form asp-action="Reject" asp-route-id="@booking.Id" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-warning text-dark">
+                                    Reject
+                                </button>
+                            </form>
+
+                        }
+                    </div>
+
+                    <!-- ปุ่ม Delete อยู่ฝั่งขวา -->
+                    @if (User.IsInRole(Roles.Admin))
+                    {
+                        <a asp-action="Delete" asp-route-id="@booking.Id" class="btn btn-sm btn-danger ms-auto">
+                            Delete
+                        </a>
+                    }
+
+                </div>
+
+
+            </div>
+        }
+    </div>
+}

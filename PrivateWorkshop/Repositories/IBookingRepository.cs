@@ -6,6 +6,7 @@ namespace PrivateWorkshop.Repositories
     public interface IBookingRepository
     {
         Task<IEnumerable<Booking>> GetAllAsync();
+        Task<IEnumerable<Booking>> GetByClientIdAsync(string clientId);
         Task<Booking?> GetByIdAsync(Guid id);
         Task AddAsync(Booking entity);
         Task<int> CountBookingsAsync(Guid workshopId, DateOnly date, TimeSlot duration);

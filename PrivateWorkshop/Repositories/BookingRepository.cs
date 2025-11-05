@@ -28,25 +28,43 @@ namespace PrivateWorkshop.Repositories
                          && b.Duration == duration)
                 .CountAsync();
         }
+        public async Task<IEnumerable<Booking>> GetAllAsync()
+        {
+            return await _context.Bookings
+                .Include(b => b.Client)
+                .Include(b => b.Workshop)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Booking>> GetByClientIdAsync(string clientId)
+        {
+            return await _context.Bookings
+                .Where(b => b.ClientId == clientId)
+                .Include(b => b.Client)
+                .Include(b => b.Workshop)
+                .ToListAsync();
+        }
+
+        public async Task<Booking?> GetByIdAsync(Guid id)
+        {
+            return await _context.Bookings
+                .Include(b => b.Workshop)   
+                .Include(b => b.Client)    
+                .FirstOrDefaultAsync(b => b.Id == id);
+        }
 
         public Task DeleteAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Booking>> GetAllAsync()
+
+
+        public async Task UpdateAsync(Booking entity)
         {
-            throw new NotImplementedException();
+            _context.Bookings.Update(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<Booking?> GetByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(Booking entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
