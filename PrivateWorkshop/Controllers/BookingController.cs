@@ -112,6 +112,51 @@ namespace PrivateWorkshop.Controllers
             return RedirectToAction("MyBookings");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Cancel(Guid id)
+        {
+            var booking = await _bookingRepository.GetByIdAsync(id);
+            if (booking == null)
+                return NotFound();
+
+            var userId = _userManager.GetUserId(User);
+
+            // ✅ ป้องกัน Client ยกเลิกของคนอื่น
+            if (booking.ClientId != userId && !User.IsInRole(Roles.Admin))
+                return Forbid();
+
+            // ✅ อนุญาตให้ยกเลิกเฉพาะ Pending
+            if (booking.Status != BookingStatus.Pending)
+            {
+                TempData["Warning"] = "This booking cannot be cancelled because it is not pending.";
+                return RedirectToAction("MyBookings");
+            }
+
+            booking.Status = BookingStatus.Cancelled;
+            await _bookingRepository.UpdateAsync(booking);
+
+            TempData["Success"] = "Your booking has been cancelled.";
+            return RedirectToAction("MyBookings");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            // ✅ Admin Only
+            if (!User.IsInRole(Roles.Admin))
+                return Forbid();
+
+            var booking = await _bookingRepository.GetByIdAsync(id);
+            if (booking == null)
+                return NotFound();
+
+            await _bookingRepository.DeleteAsync(id);
+
+            TempData["Success"] = "Booking deleted successfully.";
+            return RedirectToAction("MyBookings");
+        }
+
 
     }
 }

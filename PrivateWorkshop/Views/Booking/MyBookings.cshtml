@@ -85,9 +85,12 @@ else
 
                         @if (!User.IsInRole(Roles.Admin) && booking.Status == BookingStatus.Pending)
                         {
-                            <a asp-action="Cancel" asp-route-id="@booking.Id" class="btn btn-sm btn-danger">
-                                Cancel Booking
-                            </a>
+                            <form asp-action="Cancel" asp-route-id="@booking.Id" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    Cancel Booking
+                                </button>
+                            </form>
                         }
 
                         @if (User.IsInRole(Roles.Admin) && booking.Status == BookingStatus.Pending)
@@ -107,13 +110,16 @@ else
                         }
                     </div>
 
-                    <!-- ปุ่ม Delete อยู่ฝั่งขวา -->
                     @if (User.IsInRole(Roles.Admin))
                     {
-                        <a asp-action="Delete" asp-route-id="@booking.Id" class="btn btn-sm btn-danger ms-auto">
-                            Delete
-                        </a>
+                        <form asp-action="Delete" asp-route-id="@booking.Id" method="post" class="d-inline ms-auto">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                Delete
+                            </button>
+                        </form>
                     }
+
 
                 </div>
 

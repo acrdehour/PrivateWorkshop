@@ -53,10 +53,18 @@ namespace PrivateWorkshop.Repositories
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
 
-        public Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var booking = await _context.Bookings.FindAsync(id);
+            if (booking == null)
+            {
+                throw new KeyNotFoundException($"Booking with ID {id} not found.");
+            }
+
+            _context.Bookings.Remove(booking);
+            await _context.SaveChangesAsync();
         }
+
 
 
 
