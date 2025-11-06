@@ -5,6 +5,7 @@ using PrivateWorkshop.Models;
 using PrivateWorkshop.Models.Enums;
 using PrivateWorkshop.Repositories;
 using PrivateWorkshop.ViewModels;
+using System.Globalization;
 
 namespace PrivateWorkshop.Controllers
 {
@@ -70,22 +71,25 @@ namespace PrivateWorkshop.Controllers
             return Json(new { remaining });
         }
 
-        public async Task<IActionResult> MyBookings()
+        public async Task<IActionResult> MyBookings(string sortBy = "created")
         {
             IEnumerable<Booking> bookings;
 
             if (User.IsInRole(Roles.Admin))
             {
-                bookings = await _bookingRepository.GetAllAsync();
+                bookings = await _bookingRepository.GetAllAsync(sortBy);
             }
             else
             {
                 var userId = _userManager.GetUserId(User);
-                bookings = await _bookingRepository.GetByClientIdAsync(userId);
+                bookings = await _bookingRepository.GetByClientIdAsync(userId, sortBy);
             }
+
+            ViewBag.SortBy = sortBy.ToLower(); // ส่งค่าให้ dropdown จำ state
 
             return View(bookings);
         }
+
         [HttpPost]
         public async Task<IActionResult> Approve(Guid id)
         {
