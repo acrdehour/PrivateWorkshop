@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using PrivateWorkshop.Constants;
 using PrivateWorkshop.Models;
 using PrivateWorkshop.Models.Enums;
@@ -71,24 +72,48 @@ namespace PrivateWorkshop.Controllers
             return Json(new { remaining });
         }
 
-        public async Task<IActionResult> MyBookings(string sortBy = "created")
+        public async Task<IActionResult> MyBookings(string sortBy = "created", string? filterStatus = null)
         {
             IEnumerable<Booking> bookings;
 
             if (User.IsInRole(Roles.Admin))
             {
-                bookings = await _bookingRepository.GetAllAsync(sortBy);
+                bookings = await _bookingRepository.GetAllAsync();
             }
             else
             {
                 var userId = _userManager.GetUserId(User);
-                bookings = await _bookingRepository.GetByClientIdAsync(userId, sortBy);
+                bookings = await _bookingRepository.GetByClientIdAsync(userId);
             }
 
-            ViewBag.SortBy = sortBy.ToLower(); // ส่งค่าให้ dropdown จำ state
+            // Filter
+            /*if (filterStatus.HasValue)
+            {
+                bookings = bookings.Where(b => b.Status == filterStatus.Value);
+            }*/
+            if (!string.IsNullOrEmpty(filterStatus))
+            {
+                if (int.TryParse(filterStatus, out int statusValue) &&
+                    Enum.IsDefined(typeof(BookingStatus), statusValue))
+                {
+                    bookings = bookings.Where(b => b.Status == (BookingStatus)statusValue);
+                }
+            }
+
+            // Sorting
+            bookings = sortBy switch
+            {
+                "date" => bookings.OrderByDescending(b => b.Date),
+                _ => bookings.OrderByDescending(b => b.CreatedAt)
+            };
+
+            // ส่งค่ากลับไป UI
+            ViewBag.SortBy = sortBy;
+            ViewBag.FilterStatus = filterStatus;
 
             return View(bookings);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Approve(Guid id)

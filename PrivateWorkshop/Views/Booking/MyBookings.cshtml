@@ -4,45 +4,46 @@
 
 <h1 class="text-center mb-5">My Bookings</h1>
 
-@if (!Model.Any())
+<div class="d-flex justify-content-between mb-3">
+    <form method="get" class="d-flex align-items-center">
+
+        <label for="sortBy" class="me-2 fw-semibold mb-0">Sort by:</label>
+        <select name="sortBy" id="sortBy" class="form-select form-select-sm me-3" onchange="this.form.submit()">
+            <option value="created" selected="@(ViewBag.SortBy == "created")">Created Date</option>
+            <option value="date" selected="@(ViewBag.SortBy == "date")">Booking Date</option>
+        </select>
+
+        <label for="filterStatus" class="me-2 fw-semibold mb-0">Filter:</label>
+        <select name="filterStatus" id="filterStatus" class="form-select form-select-sm" onchange="this.form.submit()">
+            <option value="" selected="@(ViewBag.FilterStatus == null)">All</option>
+            <option value="@((int)BookingStatus.Pending)" selected="@(ViewBag.FilterStatus == ((int)BookingStatus.Pending).ToString())">Pending</option>
+            <option value="@((int)BookingStatus.Approved)" selected="@(ViewBag.FilterStatus == ((int)BookingStatus.Approved).ToString())">Approved</option>
+            <option value="@((int)BookingStatus.Rejected)" selected="@(ViewBag.FilterStatus == ((int)BookingStatus.Rejected).ToString())">Rejected</option>
+            <option value="@((int)BookingStatus.Cancelled)" selected="@(ViewBag.FilterStatus == ((int)BookingStatus.Cancelled).ToString())">Cancelled</option>
+        </select>
+
+
+    </form>
+</div>
+
+
+@if (Model == null || !Model.Any())
 {
     <div class="alert alert-info text-center">
-        You have no bookings yet.
+        No results found.
     </div>
 }
 else
 {
-    <div class="d-flex justify-content-end mb-3">
-        <form method="get" class="d-flex align-items-center">
-        <label for="sortBy" class="me-2 fw-semibold mb-0">Sort by:</label>
-            <select name="sortBy" id="sortBy" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
-                <option value="created" selected="@(ViewBag.SortBy == "created")">Created Date</option>
-                <option value="date" selected="@(ViewBag.SortBy == "date")">Booking Date</option>
-        </select>
-    </form>
-    </div>
-
-
-
-
     <div class="list-group">
         @foreach (var booking in Model)
         {
             <div class="list-group-item mb-3" id="booking-@booking.Id">
                 <h4>@booking.Workshop.Title</h4>
-                <p>
-                    <strong>Client:</strong> @booking.Client.Email
-                </p>
+                <p><strong>Client:</strong> @booking.Client.Email</p>
+                <p><strong>Date:</strong> @booking.Date.ToString("yyyy-MM-dd")</p>
+                <p><strong>Time Slot:</strong> @booking.Duration</p>
 
-                <p>
-                    <strong>Date:</strong> @booking.Date.ToString("yyyy-MM-dd")
-                </p>
-
-                <p>
-                    <strong>Time Slot:</strong> @booking.Duration
-                </p>
-
-                <p>
                 <p>
                     <strong>Status:</strong>
                     @{
@@ -52,44 +53,23 @@ else
                         switch (booking.Status)
                         {
                             case BookingStatus.Pending:
-                                statusText = "รอดำเนินการ";
-                                statusClass = "warning";
-                                break;
-
+                                statusText = "รอดำเนินการ"; statusClass = "warning"; break;
                             case BookingStatus.Approved:
-                                statusText = "อนุมัติแล้ว";
-                                statusClass = "success";
-                                break;
-
+                                statusText = "อนุมัติแล้ว"; statusClass = "success"; break;
                             case BookingStatus.Rejected:
-                                statusText = "ถูกปฏิเสธ";
-                                statusClass = "danger";
-                                break;
-
+                                statusText = "ถูกปฏิเสธ"; statusClass = "danger"; break;
                             case BookingStatus.Cancelled:
-                                statusText = "ยกเลิก";
-                                statusClass = "secondary";
-                                break;
-
+                                statusText = "ยกเลิก"; statusClass = "secondary"; break;
                             default:
-                                statusText = booking.Status.ToString();
-                                statusClass = "secondary";
-                                break;
+                                statusText = booking.Status.ToString(); statusClass = "secondary"; break;
                         }
                     }
-
-                    <span class="badge bg-@statusClass">
-                        @statusText
-                    </span>
-                </p>
-
+                    <span class="badge bg-@statusClass">@statusText</span>
                 </p>
 
                 <p><strong>Created:</strong> @booking.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</p>
 
                 <div class="d-flex justify-content-between align-items-center mt-3">
-
-                    <!-- กลุ่มปุ่มฝั่งซ้าย -->
                     <div class="d-flex gap-2">
                         <a asp-controller="Workshop" asp-action="Details" asp-route-id="@booking.WorkshopId"
                            class="btn btn-sm btn-outline-primary">
@@ -100,26 +80,19 @@ else
                         {
                             <form asp-action="Cancel" asp-route-id="@booking.Id" method="post" class="d-inline">
                                 @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-sm btn-danger">
-                                    Cancel Booking
-                                </button>
+                                <button type="submit" class="btn btn-sm btn-danger">Cancel Booking</button>
                             </form>
                         }
 
                         @if (User.IsInRole(Roles.Admin) && booking.Status == BookingStatus.Pending)
                         {
                             <form asp-action="Approve" asp-route-id="@booking.Id" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-sm btn-success">
-                                    Approve
-                                </button>
+                                <button type="submit" class="btn btn-sm btn-success">Approve</button>
                             </form>
 
                             <form asp-action="Reject" asp-route-id="@booking.Id" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-sm btn-warning text-dark">
-                                    Reject
-                                </button>
+                                <button type="submit" class="btn btn-sm btn-warning text-dark">Reject</button>
                             </form>
-
                         }
                     </div>
 
@@ -127,16 +100,10 @@ else
                     {
                         <form asp-action="Delete" asp-route-id="@booking.Id" method="post" class="d-inline ms-auto">
                             @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-sm btn-danger">
-                                Delete
-                            </button>
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                         </form>
                     }
-
-
                 </div>
-
-
             </div>
         }
     </div>

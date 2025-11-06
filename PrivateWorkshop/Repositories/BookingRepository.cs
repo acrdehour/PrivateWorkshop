@@ -28,44 +28,28 @@ namespace PrivateWorkshop.Repositories
                          && b.Duration == duration)
                 .CountAsync();
         }
-        public async Task<IEnumerable<Booking>> GetAllAsync(string sortBy)
+        public async Task<IEnumerable<Booking>> GetAllAsync()
         {
-            var query = _context.Bookings
-        .Include(b => b.Workshop)
-        .Include(b => b.Client)
-        .AsQueryable();
-
-            query = sortBy.ToLower() switch
-            {
-                "date" => query.OrderByDescending(b => b.Date),
-                _ => query.OrderByDescending(b => b.CreatedAt)
-            };
-
-            return await query.ToListAsync();
+            return await _context.Bookings
+                .Include(b => b.Client)
+                .Include(b => b.Workshop)
+                .ToListAsync();
         }
 
-        public async Task<IEnumerable<Booking>> GetByClientIdAsync(string clientId, string sortBy)
+        public async Task<IEnumerable<Booking>> GetByClientIdAsync(string clientId)
         {
-            var query = _context.Bookings
-            .Where(b => b.ClientId == clientId)
-            .Include(b => b.Workshop)
-            .Include(b => b.Client)
-            .AsQueryable();
-
-            query = sortBy.ToLower() switch
-            {
-                "date" => query.OrderByDescending(b => b.Date),
-                _ => query.OrderByDescending(b => b.CreatedAt)
-            };
-
-            return await query.ToListAsync();
+            return await _context.Bookings
+                .Where(b => b.ClientId == clientId)
+                .Include(b => b.Client)
+                .Include(b => b.Workshop)
+                .ToListAsync();
         }
 
         public async Task<Booking?> GetByIdAsync(Guid id)
         {
             return await _context.Bookings
-                .Include(b => b.Workshop)
-                .Include(b => b.Client)
+                .Include(b => b.Workshop)   
+                .Include(b => b.Client)    
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
 
