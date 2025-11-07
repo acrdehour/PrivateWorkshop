@@ -72,55 +72,59 @@ namespace PrivateWorkshop.Controllers
             return Json(new { remaining });
         }
 
-        public async Task<IActionResult> MyBookings(string sortBy = "created", string? filterStatus = null, string? search = null)
+        public async Task<IActionResult> MyBookings(
+    string sortBy = "created",
+    string? filterStatus = null,
+    string? search = null,
+    int page = 1,
+    int pageSize = 5)
         {
             IEnumerable<Booking> bookings;
 
             if (User.IsInRole(Roles.Admin))
-            {
                 bookings = await _bookingRepository.GetAllAsync();
-            }
             else
+                bookings = await _bookingRepository.GetByClientIdAsync(_userManager.GetUserId(User));
+
+            // Filter Status
+            if (!string.IsNullOrEmpty(filterStatus) &&
+                int.TryParse(filterStatus, out int statusValue) &&
+                Enum.IsDefined(typeof(BookingStatus), statusValue))
             {
-                var userId = _userManager.GetUserId(User);
-                bookings = await _bookingRepository.GetByClientIdAsync(userId);
+                bookings = bookings.Where(b => b.Status == (BookingStatus)statusValue);
             }
 
-            // ✅ Filter by Status
-            if (!string.IsNullOrEmpty(filterStatus))
+            // Search
+            if (!string.IsNullOrEmpty(search))
             {
-                if (int.TryParse(filterStatus, out int statusValue) &&
-                    Enum.IsDefined(typeof(BookingStatus), statusValue))
-                {
-                    bookings = bookings.Where(b => b.Status == (BookingStatus)statusValue);
-                }
+                if (User.IsInRole(Roles.Admin))
+                    bookings = bookings.Where(b => b.Workshop.Title.Contains(search, StringComparison.OrdinalIgnoreCase)
+                                                || b.Client.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
+                else
+                    bookings = bookings.Where(b => b.Workshop.Title.Contains(search, StringComparison.OrdinalIgnoreCase));
             }
 
-            // ✅ Search
-            if (!string.IsNullOrWhiteSpace(search))
-            {
-                search = search.ToLower();
-
-                bookings = bookings.Where(b =>
-                    b.Workshop.Title.ToLower().Contains(search) ||
-                    (User.IsInRole(Roles.Admin) && b.Client.Email.ToLower().Contains(search))
-                );
-            }
-
-            // ✅ Sorting
+            // Sorting
             bookings = sortBy switch
             {
                 "date" => bookings.OrderByDescending(b => b.Date),
                 _ => bookings.OrderByDescending(b => b.CreatedAt)
             };
 
-            // Pass UI state
+            // ✅ Paging
+            int totalItems = bookings.Count();
+            bookings = bookings.Skip((page - 1) * pageSize).Take(pageSize);
+
+            // ส่งค่ากลับ View
+            ViewBag.Page = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
             ViewBag.SortBy = sortBy;
             ViewBag.FilterStatus = filterStatus;
             ViewBag.Search = search;
 
             return View(bookings);
         }
+
 
 
 
