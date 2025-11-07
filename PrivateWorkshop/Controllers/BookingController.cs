@@ -72,7 +72,7 @@ namespace PrivateWorkshop.Controllers
             return Json(new { remaining });
         }
 
-        public async Task<IActionResult> MyBookings(string sortBy = "created", string? filterStatus = null)
+        public async Task<IActionResult> MyBookings(string sortBy = "created", string? filterStatus = null, string? search = null)
         {
             IEnumerable<Booking> bookings;
 
@@ -86,11 +86,7 @@ namespace PrivateWorkshop.Controllers
                 bookings = await _bookingRepository.GetByClientIdAsync(userId);
             }
 
-            // Filter
-            /*if (filterStatus.HasValue)
-            {
-                bookings = bookings.Where(b => b.Status == filterStatus.Value);
-            }*/
+            // ✅ Filter by Status
             if (!string.IsNullOrEmpty(filterStatus))
             {
                 if (int.TryParse(filterStatus, out int statusValue) &&
@@ -100,19 +96,32 @@ namespace PrivateWorkshop.Controllers
                 }
             }
 
-            // Sorting
+            // ✅ Search
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.ToLower();
+
+                bookings = bookings.Where(b =>
+                    b.Workshop.Title.ToLower().Contains(search) ||
+                    (User.IsInRole(Roles.Admin) && b.Client.Email.ToLower().Contains(search))
+                );
+            }
+
+            // ✅ Sorting
             bookings = sortBy switch
             {
                 "date" => bookings.OrderByDescending(b => b.Date),
                 _ => bookings.OrderByDescending(b => b.CreatedAt)
             };
 
-            // ส่งค่ากลับไป UI
+            // Pass UI state
             ViewBag.SortBy = sortBy;
             ViewBag.FilterStatus = filterStatus;
+            ViewBag.Search = search;
 
             return View(bookings);
         }
+
 
 
         [HttpPost]
