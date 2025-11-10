@@ -61,5 +61,5 @@ Built as a capstone-style project to demonstrate production-level architecture i
 ## 🧑‍💻 Author  
 **Aujchara Deeunkong**  
 Open to opportunities in **.NET Backend Engineering**  
-🔗 LinkedIn: [add your LinkedIn link here]  
-📧 Email: [add your email here]
+🔗 LinkedIn: www.linkedin.com/in/acrdehour-592789391
+📧 Email: acrdehour@gmail.com
