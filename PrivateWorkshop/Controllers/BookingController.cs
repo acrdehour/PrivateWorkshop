@@ -31,7 +31,7 @@ namespace PrivateWorkshop.Controllers
         {
             if (!ModelState.IsValid)
             {
-                TempData["Error"] = "Please select both date and time slot.";
+                //TempData["Error"] = "Please select both date and time slot.";
                 return RedirectToAction("Details", "Workshop", new { id = model.WorkshopId });
             }
 
@@ -56,7 +56,7 @@ namespace PrivateWorkshop.Controllers
 
             await _bookingRepository.AddAsync(booking);
 
-            TempData["Success"] = "Booking created successfully!";
+            //TempData["Success"] = "Booking created successfully!";
             return RedirectToAction("MyBookings");
         }
         [HttpGet]
@@ -137,7 +137,7 @@ namespace PrivateWorkshop.Controllers
             booking.Status = BookingStatus.Approved;
             await _bookingRepository.UpdateAsync(booking);
 
-            TempData["Success"] = "Booking approved successfully.";
+            //TempData["Success"] = "Booking approved successfully.";
             return RedirectToAction("MyBookings");
         }
 
@@ -150,7 +150,7 @@ namespace PrivateWorkshop.Controllers
             booking.Status = BookingStatus.Rejected;
             await _bookingRepository.UpdateAsync(booking);
 
-            TempData["Warning"] = "Booking rejected.";
+            //TempData["Warning"] = "Booking rejected.";
             return RedirectToAction("MyBookings");
         }
 
@@ -171,14 +171,14 @@ namespace PrivateWorkshop.Controllers
             // ✅ อนุญาตให้ยกเลิกเฉพาะ Pending
             if (booking.Status != BookingStatus.Pending)
             {
-                TempData["Warning"] = "This booking cannot be cancelled because it is not pending.";
+                //TempData["Warning"] = "This booking cannot be cancelled because it is not pending.";
                 return RedirectToAction("MyBookings");
             }
 
             booking.Status = BookingStatus.Cancelled;
             await _bookingRepository.UpdateAsync(booking);
 
-            TempData["Success"] = "Your booking has been cancelled.";
+            //TempData["Success"] = "Your booking has been cancelled.";
             return RedirectToAction("MyBookings");
         }
         [HttpPost]
@@ -195,7 +195,7 @@ namespace PrivateWorkshop.Controllers
 
             await _bookingRepository.DeleteAsync(id);
 
-            TempData["Success"] = "Booking deleted successfully.";
+            //TempData["Success"] = "Booking deleted successfully.";
             return RedirectToAction("MyBookings");
         }
 
