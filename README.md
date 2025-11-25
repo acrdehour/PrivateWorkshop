@@ -68,6 +68,45 @@ The solution includes a dedicated **Unit Test Project** using **xUnit** to valid
 
 ---
 
+## 📁 Project Structure
+PrivateWorkshop/
+│
+├── PrivateWorkshop/                     # Main ASP.NET Core MVC project
+│   ├── Areas/
+│   │   └── Identity/
+│   │       └── Pages/                   # Identity UI pages (Login, Register, etc.)
+│   │
+│   ├── Constants/                       # Constant values (roles, configs, etc.)
+│   ├── Controllers/                     # MVC Controllers for Admin, Client, Guest
+│   ├── Data/                            # ApplicationDbContext & Seeder
+│   ├── Migrations/                      # EF Core migration files
+│   ├── Models/                          # Entity models + Enums
+│   ├── Properties/                      # LaunchSettings.json
+│   ├── Repositories/                    # Repository interfaces & implementations
+│   ├── ViewModels/                      # DTOs used for Views
+│   ├── Views/                           # Razor Views (Admin, Client, Shared)
+│   ├── wwwroot/                         # Static files (CSS, JS, images)
+│   │
+│   ├── PrivateWorkshop.csproj           # Project file
+│   ├── Program.cs                       # Main entry point
+│   ├── appsettings.json                 # App config
+│   └── appsettings.Development.json     # Dev environment config
+│
+├── PrivateWorkshop.Tests/               # xUnit Test Project
+│   ├── BookingRepositoryTests.cs
+│   ├── WorkshopRepositoryTests.cs
+│   └── PrivateWorkshop.Tests.csproj
+│
+├── assets/
+│   └── screenshots/                     # All screenshots used in README
+│
+├── .gitattributes
+├── .gitignore
+├── PrivateWorkshop.sln
+└── README.md
+
+---
+
 ## 🎯 Highlights  
 - Clean, layered **MVC + Repository** architecture  
 - Full CRUD and data validation workflow  
