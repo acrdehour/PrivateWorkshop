@@ -8,7 +8,7 @@ PrivateWorkshop is a real-world simulation of a workshop reservation platform de
 It showcases key backend and frontend skills including **authentication with Identity**, **role-based access**, **session timeout**, and **data management via Repository pattern**.  
 The system supports **booking creation, status control, search, filtering, sorting, and pagination**, delivering a smooth and practical web app experience.  
 Built as a capstone-style project to demonstrate production-level architecture in ASP.NET Core MVC.
-
+**Unit testing with xUnit**
 ---
 
 ## ✨ Features  
@@ -35,8 +35,21 @@ Built as a capstone-style project to demonstrate production-level architecture i
 - **Sorting** (Created Date, Workshop Date)  
 - **Filtering** by Booking Status  
 - **Searching** by Workshop Name or Participant Email  
-- **Pagination** for large datasets  
+- **Pagination** for large datasets
 
+---
+
+## 🧪 Unit Testing  
+The solution includes a dedicated **Unit Test Project** using **xUnit** to validate Repository functionality.
+
+### ✔ Test Highlights  
+- In-memory EF Core testing with `UseInMemoryDatabase`  
+- Test coverage for:  
+  - Creating bookings  
+  - Fetching records  
+  - Basic repository CRUD behavior  
+- Fully isolated, repeatable tests
+  
 ---
 
 ## 🧰 Technologies  
@@ -55,7 +68,8 @@ Built as a capstone-style project to demonstrate production-level architecture i
 - Session expiration with sliding renewal  
 - Seamless UI with search + filter + sort + pagination  
 - Demonstrates real-world **role-based authorization** in .NET  
-
+- Includes **unit-tested** repository layer for reliability
+  
 ---
 
 ## 🧑‍💻 Author  
