@@ -69,7 +69,7 @@ The solution includes a dedicated **Unit Test Project** using **xUnit** to valid
 ---
 
 ## 📁 Project Structure
-
+```
 PrivateWorkshop/
 │
 ├── PrivateWorkshop/ # Main ASP.NET Core MVC project
@@ -105,7 +105,7 @@ PrivateWorkshop/
 ├── .gitignore
 ├── PrivateWorkshop.sln
 └── README.md
-
+```
 ---
 
 ## 🎯 Highlights  
