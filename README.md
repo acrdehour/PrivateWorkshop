@@ -97,6 +97,9 @@ Below is a visual overview of core system functionality.
 #### Workshop Detail & Enrollment
 ![Workshop Detail](assets/screenshots/pw-client-wsdetail.png)
 
+#### Booking Management (Client)
+![Bookings](assets/screenshots/pw-client-bookings.png)
+
 ---
 
 ### 3. Admin Experience
