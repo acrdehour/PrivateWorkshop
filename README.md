@@ -69,6 +69,7 @@ The solution includes a dedicated **Unit Test Project** using **xUnit** to valid
 ---
 
 ## 📁 Project Structure
+
 PrivateWorkshop/
 │
 ├── PrivateWorkshop/                     # Main ASP.NET Core MVC project
@@ -98,7 +99,7 @@ PrivateWorkshop/
 │   └── PrivateWorkshop.Tests.csproj
 │
 ├── assets/
-│   └── screenshots/                     # All screenshots used in README
+│   └── screenshots/                     # Screenshots used in README
 │
 ├── .gitattributes
 ├── .gitignore
