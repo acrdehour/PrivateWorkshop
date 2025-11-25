@@ -78,6 +78,71 @@ The solution includes a dedicated **Unit Test Project** using **xUnit** to valid
   
 ---
 
+## 📸 Application Screenshots
+
+Below is a visual overview of core system functionality.
+
+---
+
+### 1. Guest Experience
+#### Home Page (Guest)
+![Guest Home](assets/screenshots/pw-guest-home.png)
+
+---
+
+### 2. Client Experience
+#### Home Page (Client)
+![Client Home](assets/screenshots/pw-client-home.png)
+
+#### Workshop Detail & Enrollment
+![Workshop Detail](assets/screenshots/pw-client-wsdetail.png)
+
+---
+
+### 3. Admin Experience
+#### Admin Dashboard
+![Admin Home](assets/screenshots/pw-admin-home.png)
+
+#### Add Workshop
+![Add Workshop](assets/screenshots/pw-admin-addws.png)
+
+---
+
+### 4. Booking Management (Admin)
+#### Sort Feature
+![Sort Feature](assets/screenshots/pw-admin-bookings-sort.png)
+
+#### Filter Feature
+![Filter Feature](assets/screenshots/pw-admin-bookings-filter.png)
+
+#### Search Feature
+![Search Feature](assets/screenshots/pw-admin-bookings-search.png)
+
+#### Pagination Feature
+![Pagination Feature](assets/screenshots/pw-admin-bookings-paging.png)
+
+---
+
+### 5. Authentication
+#### Login Page
+![Login Page](assets/screenshots/pw-login.png)
+
+#### Registration Page
+![Register Page](assets/screenshots/pw-reg.png)
+
+#### Logout Page
+![Logout Page](assets/screenshots/pw-logout.png)
+
+---
+
+## 🚀 How to Run  
+1. Update your SQL Server connection string  
+2. Run database migrations  
+3. Launch the application  
+4. Default roles will auto-generate (Admin / Client)
+
+---
+
 ## 🧑‍💻 Author  
 **Aujchara Deeunkong**  
 Open to opportunities in **.NET Backend Engineering**  
