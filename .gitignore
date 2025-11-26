@@ -364,3 +364,4 @@ FodyWeavers.xsd
 
 # Exclude sensitive configuration files from committing
 appsettings.Development.json
+/PrivateWorkshop/appsettings.Development.json
