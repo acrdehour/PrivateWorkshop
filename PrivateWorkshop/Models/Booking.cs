@@ -8,11 +8,11 @@ namespace PrivateWorkshop.Models
     public class Booking
     {
         public Guid Id { get; set; }
-        // ✅ Foreign key field
+        // Foreign key field
         [Required] 
         public string ClientId { get; set; }
 
-        // ✅ Navigation property
+        // Navigation property
         [ForeignKey(nameof(ClientId))]
         public IdentityUser Client { get; set; }
         [Required]

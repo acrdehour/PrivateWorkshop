@@ -111,11 +111,10 @@ namespace PrivateWorkshop.Controllers
                 _ => bookings.OrderByDescending(b => b.CreatedAt)
             };
 
-            // ✅ Paging
+            // Paging
             int totalItems = bookings.Count();
             bookings = bookings.Skip((page - 1) * pageSize).Take(pageSize);
 
-            // ส่งค่ากลับ View
             ViewBag.Page = page;
             ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
             ViewBag.SortBy = sortBy;
@@ -164,11 +163,9 @@ namespace PrivateWorkshop.Controllers
 
             var userId = _userManager.GetUserId(User);
 
-            // ✅ ป้องกัน Client ยกเลิกของคนอื่น
             if (booking.ClientId != userId && !User.IsInRole(Roles.Admin))
                 return Forbid();
 
-            // ✅ อนุญาตให้ยกเลิกเฉพาะ Pending
             if (booking.Status != BookingStatus.Pending)
             {
                 //TempData["Warning"] = "This booking cannot be cancelled because it is not pending.";
@@ -185,7 +182,7 @@ namespace PrivateWorkshop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id)
         {
-            // ✅ Admin Only
+            // Admin Only
             if (!User.IsInRole(Roles.Admin))
                 return Forbid();
 
