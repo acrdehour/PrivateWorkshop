@@ -118,6 +118,32 @@ PrivateWorkshop/
   
 ---
 
+## 🛡 Concurrency & Transaction Safety (Overbooking Prevention)
+
+The booking flow implements **Optimistic Concurrency Control** and **Database Transactions**  
+to prevent real-time overbooking when multiple users attempt to reserve the same time slot.
+
+### 🔹 Key Design
+- A dedicated `WorkshopSlot` table stores booking inventory per  
+  `(WorkshopId, Date, TimeSlot)` combination
+- `RowVersion` (`[Timestamp]`) is used for concurrency detection in EF Core
+- Booking creation runs inside a database transaction:
+  1) Load/Create slot record  
+  2) Validate capacity  
+  3) `BookedCount++` with optimistic concurrency check  
+  4) Add booking record  
+  5) Commit
+
+### 🔒 Behavior Under Race Condition
+If two users book the same slot at the same time:
+- The first transaction succeeds
+- The second fails via `DbUpdateConcurrencyException`
+- UI notifies user to select another time slot
+
+This ensures **accurate inventory**, **data integrity**, and **zero overbooking** even under concurrent load.
+
+---
+
 ## 📸 Application Screenshots
 
 Below is a visual overview of core system functionality.
