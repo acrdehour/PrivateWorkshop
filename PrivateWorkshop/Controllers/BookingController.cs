@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PrivateWorkshop.Constants;
 using PrivateWorkshop.Models;
@@ -28,6 +29,23 @@ namespace PrivateWorkshop.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Create(BookingCreateViewModel model)
+        {
+            var userId = _userManager.GetUserId(User);
+            var result = await _bookingRepository.CreateBookingAsync(model, userId);
+
+            if (!result.Succeeded)
+            {
+                //TempData["Error"] = result.ErrorMessage;
+                return RedirectToAction("Details", new { id = model.WorkshopId });
+            }
+
+            //TempData["Success"] = "Booking created successfully!";
+            return RedirectToAction("MyBookings");
+        }
+
+
+
+        /*public async Task<IActionResult> Create(BookingCreateViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -58,7 +76,7 @@ namespace PrivateWorkshop.Controllers
 
             //TempData["Success"] = "Booking created successfully!";
             return RedirectToAction("MyBookings");
-        }
+        }*/
         [HttpGet]
         public async Task<IActionResult> CheckAvailability(Guid workshopId, DateOnly date, TimeSlot duration)
         {

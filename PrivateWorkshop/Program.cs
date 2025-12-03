@@ -30,6 +30,7 @@ builder.Services.Configure<CookieAuthenticationOptions>(IdentityConstants.Applic
 
 builder.Services.AddScoped<IWorkshopRepository, WorkshopRepository>();
 builder.Services.AddScoped<IBookingRepository,BookingRepository>();
+builder.Services.AddScoped<IWorkshopSlotRepository, WorkshopSlotRepository>();
 
 builder.Services.AddControllersWithViews();
 

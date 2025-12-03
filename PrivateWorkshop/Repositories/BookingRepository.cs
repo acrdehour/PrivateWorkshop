@@ -2,22 +2,78 @@
 using PrivateWorkshop.Data;
 using PrivateWorkshop.Models;
 using PrivateWorkshop.Models.Enums;
+using PrivateWorkshop.Models.Services;
+using PrivateWorkshop.ViewModels;
 
 namespace PrivateWorkshop.Repositories
 {
     public class BookingRepository : IBookingRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWorkshopSlotRepository _slotRepo;
+        private readonly IWorkshopRepository _workshopRepo;
 
-        public BookingRepository(ApplicationDbContext context)
+        public BookingRepository(ApplicationDbContext context, IWorkshopSlotRepository slotRepo, IWorkshopRepository workshopRepo)
         {
             _context = context;
+            _slotRepo = slotRepo;
+            _workshopRepo = workshopRepo;
         }
 
         public async Task AddAsync(Booking entity)
         {
             await _context.Bookings.AddAsync(entity);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Result> CreateBookingAsync(BookingCreateViewModel model, string userId)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                var workshop = await _workshopRepo.GetByIdAsync(model.WorkshopId);
+                if (workshop == null)
+                    return Result.Fail("Workshop not found");
+
+                var slot = await _slotRepo.GetOrCreateSlotAsync(workshop.Id, model.SelectedDate,
+                                                                model.Duration, workshop.MaxSlot);
+
+                if (slot.BookedCount >= slot.MaxSlot)
+                    return Result.Fail("Time slot full");
+
+                slot.BookedCount++;
+
+                _context.WorkshopSlots.Update(slot);
+
+                var booking = new Booking
+                {
+                    Id = Guid.NewGuid(),
+                    WorkshopId = workshop.Id,
+                    ClientId = userId,
+                    Date = model.SelectedDate,
+                    Duration = model.Duration,
+                    Status = BookingStatus.Pending,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await AddAsync(booking);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return Result.Ok();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                await transaction.RollbackAsync();
+                return Result.Fail("Concurrent booking occurred. Please try again.");
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                return Result.Fail("Unexpected error occurred.");
+            }
         }
 
         public async Task<int> CountBookingsAsync(Guid workshopId, DateOnly date, TimeSlot duration)
