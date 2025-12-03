@@ -12,12 +12,15 @@ namespace PrivateWorkshop.Repositories
         private readonly ApplicationDbContext _context;
         private readonly IWorkshopSlotRepository _slotRepo;
         private readonly IWorkshopRepository _workshopRepo;
+        private readonly ILogger<BookingRepository> _logger;
 
-        public BookingRepository(ApplicationDbContext context, IWorkshopSlotRepository slotRepo, IWorkshopRepository workshopRepo)
+        public BookingRepository(ApplicationDbContext context, IWorkshopSlotRepository slotRepo, IWorkshopRepository workshopRepo,
+    ILogger<BookingRepository> logger)
         {
             _context = context;
             _slotRepo = slotRepo;
             _workshopRepo = workshopRepo;
+            _logger = logger;
         }
 
         public async Task AddAsync(Booking entity)
@@ -62,7 +65,16 @@ namespace PrivateWorkshop.Repositories
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
+                _logger.LogInformation(
+    "User {UserId} booked Workshop {WorkshopId} on {Date} ({Slot})",
+    userId,
+    workshop.Id,
+    model.SelectedDate.ToString("yyyy-MM-dd"),
+    model.Duration);
+
                 return Result.Ok();
+                
+
             }
             catch (DbUpdateConcurrencyException)
             {
