@@ -75,13 +75,13 @@ PrivateWorkshop/
 ├── PrivateWorkshop/ # Main ASP.NET Core MVC project
 │ ├── Areas/
 │ │ └── Identity/
-│ │ └── Pages/ # Identity UI pages (Login, Register, etc.)
+│ │  └── Pages/ # Identity UI pages (Login, Register, etc.)
 │ │
-│ ├── Constants/ # Constant values (roles, configs, etc.)
-│ ├── Controllers/ # MVC Controllers for Admin, Client, Guest
+│ ├── Constants/ # Constant values (roles)
+│ ├── Controllers/ # MVC Controllers for Bookings, Workshops
 │ ├── Data/ # ApplicationDbContext & Seeder
 │ ├── Migrations/ # EF Core migration files
-│ ├── Models/ # Entity models + Enums
+│ ├── Models/ # Entity models + Enums + Services
 │ ├── Properties/ # LaunchSettings.json
 │ ├── Repositories/ # Repository interfaces & implementations
 │ ├── ViewModels/ # DTOs used for Views
@@ -91,12 +91,11 @@ PrivateWorkshop/
 │ ├── PrivateWorkshop.csproj # Project file
 │ ├── Program.cs # Main entry point
 │ ├── appsettings.json # App config
-│ └── appsettings.Development.json # Dev environment config
 │
 ├── PrivateWorkshop.Tests/ # xUnit Test Project
 │ ├── BookingRepositoryTests.cs
-│ ├── WorkshopRepositoryTests.cs
-│ └── PrivateWorkshop.Tests.csproj
+│ ├── PrivateWorkshop.Tests.csproj
+│ └── WorkshopRepositoryTests.cs
 │
 ├── assets/
 │ └── screenshots/ # Screenshots used in README
